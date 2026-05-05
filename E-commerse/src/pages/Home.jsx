@@ -24,10 +24,14 @@ const Home = () => {
 
 
     return (
+
+        <>
+             <SearchBar
+                value={search}
+                onChange={setSearch}
+                products={products}
+            />
             <div className="pt-24 px-4 md:px-10  max-w-7xl mx-auto">
-
-
-
                 {
                     Object.keys(groupedProducts).map((category) => (
 
@@ -88,6 +92,7 @@ const Home = () => {
                 }
 
             </div>
+        </>
 
     )
 }

@@ -71,9 +71,8 @@ const SearchBar = ({ value, onChange, products }) => {
         };
     }, []);
     return (
-        <div className="pt-24 px-4 md:px-10 max-w-7xl mx-auto">
+        <div className="pt-24 px-4 md:px-10 max-w-7xl mx-auto ">
             <div ref={wrapperRef} className="w-full bg-linear-to-b from-blue-400 to-purple-400 rounded-xl  mx-auto h-full relative py-2 px-2">
-
                 <div className="group flex items-center max-w-3xl mx-auto backdrop-blur-lg border-3 border-white rounded-full shadow-xl px-5 py-3 hover:border-yellow-400 transition-all duration-300 hover:shadow-2xl w-full">
                     <FaSearch className="text-white mr-2 group-hover:text-yellow-400 hover:border-0 transition duration-300 " />
 
@@ -102,7 +101,7 @@ const SearchBar = ({ value, onChange, products }) => {
 
                 {
                     suggestions.length > 0 && (
-                        <div className="absolute w-full bg-blue-100 mt-3 rounded-2xl shadow-2xl overflow-hidden z-50 animate-fadeIn">
+                        <div className="absolute left-1/2 transform -translate-x-1/2 w-3xl bg-blue-100 mt-3 rounded-2xl shadow-2xl overflow-hidden z-50 animate-fadeIn">
 
                             {
                                 suggestions.map((item, index) => (

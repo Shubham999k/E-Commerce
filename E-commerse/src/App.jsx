@@ -5,7 +5,6 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Cart from "./pages/Cart";
 import Footer from "./components/Footer";
-import SearchBar from "./components/SearchBar";
 
 function App() {
 
@@ -18,13 +17,6 @@ function App() {
   return (
     <BrowserRouter>
       <Navbar />
-
-      <SearchBar
-        value={search}
-        onChange={setSearch}
-        products={products}
-      />
-
       <Routes>
         <Route path="/" element={<Home search={search} />} />
         <Route path="/cart" element={<Cart search={search} />} />

@@ -8,7 +8,7 @@ const Cart = () => {
     const { cart, removeFromCart, increaseQty, decreaseQty, total } = useContext(CartContext);
 
     return (
-        <div className='min-h-screen bg-linear-to-b from-gray-100 to-gray-200 pt-24 px-4 md:px-10'>
+        <div className='h-screen bg-linear-to-b from-gray-100 to-gray-400 pt-24 px-4 md:px-10'>
 
             <h1 className='text-3xl font-bold mb-8 text-center tracking-wide'>
                 🛒 Your Cart
