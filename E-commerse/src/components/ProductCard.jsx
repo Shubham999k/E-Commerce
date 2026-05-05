@@ -13,7 +13,7 @@ const ProductCard = ({ name, price, image, rating, category, onAdd }) => {
         >
 
             {/* Image */}
-            <div className="h-40 overflow-hidden">
+            <div className="h-35 overflow-hidden">
                 <img
                     src={image}
                     alt={name}

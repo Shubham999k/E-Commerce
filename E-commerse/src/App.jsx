@@ -4,25 +4,39 @@ import { useState } from "react";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Cart from "./pages/Cart";
+import Toast from "./components/Toast";
 import Footer from "./components/Footer";
 
 function App() {
 
-  const [search, setSearch] = useState("");
+  const [toast, setToast] = useState({
+    show: false,
+    message: ""
+  });
 
-  const products = [
-    // your products array
-  ];
+  const showToast = (msg) => {
+    setToast({ show: true, message: msg });
+
+    setTimeout(() => {
+      setToast({ show: false, message: "" });
+    }, 3000);
+  };
 
   return (
     <BrowserRouter>
+
       <Navbar />
+
       <Routes>
-        <Route path="/" element={<Home search={search} />} />
-        <Route path="/cart" element={<Cart search={search} />} />
+        <Route path="/" element={<Home showToast={showToast} />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
 
       <Footer />
+
+      {/* TOAST MUST Be HERE */}
+      <Toast show={toast.show} message={toast.message} />
+
     </BrowserRouter>
   );
 }

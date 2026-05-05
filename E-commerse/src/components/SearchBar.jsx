@@ -71,7 +71,7 @@ const SearchBar = ({ value, onChange, products }) => {
         };
     }, []);
     return (
-        <div className="pt-24 px-4 md:px-10 max-w-7xl mx-auto ">
+        <div className="pt-20 px-4 md:px-10 max-w-7xl mx-auto ">
             <div ref={wrapperRef} className="w-full bg-linear-to-b from-blue-400 to-purple-400 rounded-xl  mx-auto h-full relative py-2 px-2">
                 <div className="group flex items-center max-w-3xl mx-auto backdrop-blur-lg border-3 border-white rounded-full shadow-xl px-5 py-3 hover:border-yellow-400 transition-all duration-300 hover:shadow-2xl w-full">
                     <FaSearch className="text-white mr-2 group-hover:text-yellow-400 hover:border-0 transition duration-300 " />

@@ -3,70 +3,75 @@ import SearchBar from "../components/SearchBar";
 import products from '../data/products'
 import ProductCard from '../components/ProductCard'
 import { CartContext } from '../context/CartContext'
+import { GiElectric } from "react-icons/gi";
+import { FaTshirt, FaDumbbell, FaCouch } from "react-icons/fa";
+import { MdWatch } from "react-icons/md";
 
+const categoryConfig = {
+    Electronics: { icon: <GiElectric />, color: "text-yellow-500" },
+    Fashion: { icon: <FaTshirt />, color: "text-pink-400" },
+    Accessories: { icon: <MdWatch />, color: "text-blue-400" },
+    Furniture: { icon: <FaCouch />, color: "text-orange-400" },
+    Fitness: { icon: <FaDumbbell />, color: "text-green-400" }
+};
 
+const Home = ({ showToast }) => {
 
-const Home = () => {
     const [search, setSearch] = useState("");
-    const groupedProducts = products.reduce((acc, product) => {
+    const { addToCart } = useContext(CartContext);
 
+    // FILTER PRODUCTS
+    const filteredProducts = products.filter((product) =>
+        product.name.toLowerCase().includes(search.toLowerCase())
+    );
+
+    // GROUP PRODUCTS
+    const groupedProducts = filteredProducts.reduce((acc, product) => {
         if (!acc[product.category]) {
             acc[product.category] = [];
         }
-
         acc[product.category].push(product);
-
         return acc;
-
     }, {});
 
-    const { addToCart } = useContext(CartContext);
-
-
     return (
-
         <>
-             <SearchBar
+            <SearchBar
                 value={search}
                 onChange={setSearch}
                 products={products}
             />
-            <div className="pt-24 px-4 md:px-10  max-w-7xl mx-auto">
+
+            <div className="pt-5 px-4 md:px-10 max-w-7xl mx-auto">
+
                 {
                     Object.keys(groupedProducts).map((category) => (
 
                         <section key={category} className="mb-14">
 
-                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
+                            {/* HEADER */}
+                            <div className="flex justify-between items-center mb-4">
 
-                                {/* LEFT SIDE */}
-                                <div className="flex items-center gap-2 sm:gap-3">
-
-                                    {/* ICON */}
-                                    <span className="text-lg sm:text-xl">
-                                        📦
+                                <div className="flex items-center justify-center gap-1">
+                                    <span className={`text-2xl animate-bounce ${categoryConfig[category]?.color}`}>
+                                        {categoryConfig[category]?.icon || <FaBoxOpen />}
                                     </span>
-
-                                    {/* TITLE */}
-                                    <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 tracking-wide">
+                                    <h2 className="text-xl font-bold text-gray-800">
                                         {category}
                                     </h2>
-
                                 </div>
 
-                                {/* VIEW ALL BUTTON */}
-                                <button className="text-sm sm:text-md text-blue-600 hover:underline self-start sm:self-auto">
+                                <button className="text-blue-600 hover:underline">
                                     View All →
                                 </button>
 
                             </div>
 
                             {/* LINE */}
-                            <div className="w-full h-0.5 bg-linear-to-r from-blue-400 to-purple-300 mb-6 rounded-full"></div>
+                            <div className="w-full h-0.5 bg-linear-to-r from-blue-400 to-purple-300 mb-6"></div>
 
-                            {/* CARD CONTAINER */}
-
-                            <div className="bg-linear-to-b from-blue-400 to-purple-300 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-blue-500 ">
+                            {/* CARDS */}
+                            <div className="bg-linear-to-b from-blue-300 to-purple-300 p-4 rounded-2xl">
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
@@ -76,7 +81,10 @@ const Home = () => {
                                             <ProductCard
                                                 key={item.id}
                                                 {...item}
-                                                onAdd={() => addToCart(item)}
+                                                onAdd={() => {
+                                                    addToCart(item);
+                                                    showToast(`${item.name} added to cart 🛒`);
+                                                }}
                                             />
 
                                         ))
@@ -93,8 +101,7 @@ const Home = () => {
 
             </div>
         </>
-
     )
 }
 
-export default Home
+export default Home;
