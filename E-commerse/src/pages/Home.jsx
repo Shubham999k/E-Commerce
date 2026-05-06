@@ -1,10 +1,11 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useMemo, useEffect } from 'react'
 import SearchBar from "../components/SearchBar";
 import products from '../data/products'
 import ProductCard from '../components/ProductCard'
 import { CartContext } from '../context/CartContext'
+
 import { GiElectric } from "react-icons/gi";
-import { FaTshirt, FaDumbbell, FaCouch } from "react-icons/fa";
+import { FaBoxOpen, FaTshirt, FaDumbbell, FaCouch } from "react-icons/fa";
 import { MdWatch } from "react-icons/md";
 
 const categoryConfig = {
@@ -18,27 +19,37 @@ const categoryConfig = {
 const Home = ({ showToast }) => {
 
     const [search, setSearch] = useState("");
+    const [query, setQuery] = useState("");
+
     const { addToCart } = useContext(CartContext);
 
-    // FILTER PRODUCTS
-    const filteredProducts = products.filter((product) =>
-        product.name.toLowerCase().includes(search.toLowerCase())
-    );
+    // 🔥 Debounce search
+    useEffect(() => {
+        const t = setTimeout(() => setSearch(query), 300);
+        return () => clearTimeout(t);
+    }, [query]);
 
-    // GROUP PRODUCTS
-    const groupedProducts = filteredProducts.reduce((acc, product) => {
-        if (!acc[product.category]) {
-            acc[product.category] = [];
-        }
-        acc[product.category].push(product);
-        return acc;
-    }, {});
+    // 🔥 Optimized filter
+    const filteredProducts = useMemo(() => {
+        return products.filter((product) =>
+            product.name.toLowerCase().includes(search.toLowerCase())
+        );
+    }, [search]);
+
+    // 🔥 Optimized grouping
+    const groupedProducts = useMemo(() => {
+        return filteredProducts.reduce((acc, product) => {
+            if (!acc[product.category]) acc[product.category] = [];
+            acc[product.category].push(product);
+            return acc;
+        }, {});
+    }, [filteredProducts]);
 
     return (
         <>
             <SearchBar
-                value={search}
-                onChange={setSearch}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
                 products={products}
             />
 
@@ -52,12 +63,39 @@ const Home = ({ showToast }) => {
                             {/* HEADER */}
                             <div className="flex justify-between items-center mb-4">
 
-                                <div className="flex items-center justify-center gap-1">
-                                    <span className={`text-2xl animate-bounce ${categoryConfig[category]?.color}`}>
+                                <div className="flex items-center gap-2">
+
+                                    <span className={`text-2xl ${categoryConfig[category]?.color} transition hover:scale-110`}>
                                         {categoryConfig[category]?.icon || <FaBoxOpen />}
                                     </span>
-                                    <h2 className="text-xl font-bold text-gray-800">
-                                        {category}
+
+                                    <h2 className="text-2xl font-bold flex gap-px text-gray-800">
+
+                                        {
+                                            category.split("").map((letter, index) => (
+
+                                                <span
+                                                    key={index}
+                                                    className="inline-block transition duration-300 hover:-translate-y-1"
+                                                    onMouseEnter={(e) => {
+                                                        e.target.style.color = [
+                                                            "#f59e0b",
+                                                            "#3b82f6",
+                                                            "#ef4444",
+                                                            "#8b5cf6",
+                                                            "#ec4899",
+                                                        ][index % 5];
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                        e.target.style.color = "#1f2937";
+                                                    }}
+                                                >
+                                                    {letter === " " ? "\u00A0" : letter}
+                                                </span>
+
+                                            ))
+                                        }
+
                                     </h2>
                                 </div>
 
@@ -71,7 +109,7 @@ const Home = ({ showToast }) => {
                             <div className="w-full h-0.5 bg-linear-to-r from-blue-400 to-purple-300 mb-6"></div>
 
                             {/* CARDS */}
-                            <div className="bg-linear-to-b from-blue-300 to-purple-300 p-4 rounded-2xl">
+                            <div className="bg-linear-to-b from-blue-200 to-purple-200 p-4 rounded-2xl">
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
@@ -80,11 +118,13 @@ const Home = ({ showToast }) => {
 
                                             <ProductCard
                                                 key={item.id}
-                                                {...item}
-                                                onAdd={() => {
-                                                    addToCart(item);
-                                                    showToast(`${item.name} added to cart 🛒`);
-                                                }}
+                                                name={item.name}
+                                                price={item.price}
+                                                image={item.image}
+                                                rating={item.rating}
+                                                category={item.category}
+                                                stock={item.stock}   // ✅ THIS WAS MISSING
+                                                onAdd={() => addToCart(item)}
                                             />
 
                                         ))

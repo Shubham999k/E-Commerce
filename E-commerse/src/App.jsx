@@ -7,37 +7,46 @@ import Cart from "./pages/Cart";
 import Toast from "./components/Toast";
 import Footer from "./components/Footer";
 
+import { CartProvider } from "./context/CartContext";// ✅ ADD THIS
+
 function App() {
 
   const [toast, setToast] = useState({
     show: false,
-    message: ""
+    message: "",
+    type: "success"
   });
 
-  const showToast = (msg) => {
-    setToast({ show: true, message: msg });
+  const showToast = (msg, type = "success") => {
+    setToast({ show: true, message: msg, type });
 
     setTimeout(() => {
-      setToast({ show: false, message: "" });
+      setToast({ show: false, message: "", type: "success" });
     }, 3000);
   };
-
   return (
-    <BrowserRouter>
+    <CartProvider showToast={showToast}>   {/* ✅ HERE */}
 
-      <Navbar />
+      <BrowserRouter>
 
-      <Routes>
-        <Route path="/" element={<Home showToast={showToast} />} />
-        <Route path="/cart" element={<Cart />} />
-      </Routes>
+        <Navbar />
 
-      <Footer />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/cart" element={<Cart />} />
+        </Routes>
 
-      {/* TOAST MUST Be HERE */}
-      <Toast show={toast.show} message={toast.message} />
+        <Footer />
 
-    </BrowserRouter>
+        <Toast
+          show={toast.show}
+          message={toast.message}
+          type={toast.type}
+        />
+
+      </BrowserRouter>
+
+    </CartProvider>
   );
 }
 
